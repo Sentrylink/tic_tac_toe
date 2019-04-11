@@ -27,7 +27,7 @@ import (
 )
 
 const (
-	storeTicTacToe      = "tictactoe"
+	storeTicTacToe = "tictactoe"
 )
 
 var (
@@ -101,6 +101,7 @@ func queryCmd(cdc *codec.Codec, mc []sdkTypes.ModuleClients) *cobra.Command {
 		rpc.ValidatorCommand(cdc),
 		rpc.BlockCommand(),
 		tx.SearchTxCmd(cdc),
+		authcli.GetAccountCmd("acc", cdc),
 	)
 
 	for _, m := range mc {

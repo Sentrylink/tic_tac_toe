@@ -14,8 +14,8 @@ type Keeper struct {
 
 func NewKeeper(cdc *codec.Codec, key sdk.StoreKey) Keeper {
 	return Keeper{
-		cdc:                 cdc,
-		key:       key,
+		cdc: cdc,
+		key: key,
 	}
 }
 
@@ -68,11 +68,11 @@ func (k Keeper) getGame(ctx sdk.Context, id uint) *Game {
 func (k Keeper) StartGame(ctx sdk.Context, player1, player2 sdk.AccAddress) *Game {
 	nextGameID := k.getGameId(ctx)
 	game := &Game{
-		Id: nextGameID,
+		Id:      nextGameID,
 		Player1: player1,
 		Player2: player2,
-		Fields: emptyFields(),
-		Winner: 0,
+		Fields:  emptyFields(),
+		Winner:  0,
 	}
 
 	k.storeGame(ctx, game)
@@ -101,7 +101,7 @@ func (k Keeper) Play(ctx sdk.Context, gameID uint, player sdk.AccAddress, field 
 
 	var player1ShouldPlay bool
 	movesPlayed := totalMoves(game.Fields)
-	if movesPlayed % 2 == 0 {
+	if movesPlayed%2 == 0 {
 		player1ShouldPlay = true
 	}
 

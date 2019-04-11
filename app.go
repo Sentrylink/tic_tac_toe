@@ -22,9 +22,9 @@ type App struct {
 	logger log.Logger
 
 	// Storage keys
-	keyMain          *sdk.KVStoreKey
+	keyMain *sdk.KVStoreKey
 
-	paramsKeeper params.Keeper
+	paramsKeeper  params.Keeper
 	accountKeeper auth.AccountKeeper
 
 	keeper tic_tac_toe.Keeper
@@ -73,7 +73,6 @@ func NewApp(logger log.Logger, db db.DB) *App {
 	keyTicTacToe := sdk.NewKVStoreKey("tictactoe")
 	app.keeper = tic_tac_toe.NewKeeper(cdc, keyTicTacToe)
 
-
 	app.Router().
 		AddRoute("tictactoe", tic_tac_toe.NewHandler(app.keeper))
 
@@ -107,4 +106,4 @@ func MakeDefaultCodec() *codec.Codec {
 	return cdc
 }
 
-type GenesisState struct {}
+type GenesisState struct{}

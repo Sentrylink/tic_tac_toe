@@ -5,11 +5,9 @@ import (
 )
 
 type Game struct {
-	Id uint `json:"id"`
-	Player1 sdk.AccAddress `json:"player_1"`
-	Player2 sdk.AccAddress `json:"player_2"`
-	Fields map[string]uint `json:"fields"`
-	Winner uint `json:"winner"`
+	Id      uint            `json:"id"`
+	Player1 sdk.AccAddress  `json:"player_1"`
+	Player2 sdk.AccAddress  `json:"player_2"`
+	Fields  map[string]uint `json:"fields"`
+	Winner  uint            `json:"winner"`
 }
-
-

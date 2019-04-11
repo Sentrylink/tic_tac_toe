@@ -5,12 +5,12 @@ import (
 	"github.com/cosmos/cosmos-sdk/client/keys"
 	"github.com/cosmos/cosmos-sdk/client/utils"
 	"github.com/cosmos/cosmos-sdk/codec"
+	sdk "github.com/cosmos/cosmos-sdk/types"
 	sdkTypes "github.com/cosmos/cosmos-sdk/types"
 	authtxb "github.com/cosmos/cosmos-sdk/x/auth/client/txbuilder"
 	"github.com/spf13/cobra"
-	"tic_tac_toe/x/tic_tac_toe"
 	"strconv"
-	sdk "github.com/cosmos/cosmos-sdk/types"
+	"tic_tac_toe/x/tic_tac_toe"
 )
 
 func GetCmdStartGame(cdc *codec.Codec) *cobra.Command {

@@ -53,16 +53,16 @@ func (msg MsgStartGame) GetSigners() []sdkTypes.AccAddress {
 //
 
 type MsgPlay struct {
-	GameId uint `json:game_id"`
-	Player  sdkTypes.AccAddress `json:"player"`
-	Field uint `json:"field"`
+	GameId uint                `json:game_id"`
+	Player sdkTypes.AccAddress `json:"player"`
+	Field  uint                `json:"field"`
 }
 
 func NewMsgPlay(gameId uint, player sdkTypes.AccAddress, field uint) MsgPlay {
 	return MsgPlay{
 		GameId: gameId,
-		Player:  player,
-		Field: field,
+		Player: player,
+		Field:  field,
 	}
 }
 
@@ -98,4 +98,3 @@ func (msg MsgPlay) GetSignBytes() []byte {
 func (msg MsgPlay) GetSigners() []sdkTypes.AccAddress {
 	return []sdkTypes.AccAddress{msg.Player}
 }
-

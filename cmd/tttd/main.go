@@ -52,7 +52,6 @@ func main() {
 
 	server.AddCommands(ctx, cdc, rootCmd, newApp, nil)
 
-
 	executor := cli.PrepareBaseCmd(rootCmd, "TTT", DefaultNodeHome)
 	if err := executor.Execute(); err != nil {
 		panic(err)
