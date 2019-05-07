@@ -4,18 +4,21 @@ import (
 	"fmt"
 	"github.com/cosmos/cosmos-sdk/codec"
 	sdk "github.com/cosmos/cosmos-sdk/types"
+	"github.com/cosmos/cosmos-sdk/x/auth"
 	"strconv"
 )
 
 type Keeper struct {
+	accountKeeper auth.AccountKeeper
 	key sdk.StoreKey
 	cdc *codec.Codec
 }
 
-func NewKeeper(cdc *codec.Codec, key sdk.StoreKey) Keeper {
+func NewKeeper(cdc *codec.Codec, key sdk.StoreKey, accountKeeper auth.AccountKeeper) Keeper {
 	return Keeper{
 		cdc: cdc,
 		key: key,
+		accountKeeper: accountKeeper,
 	}
 }
 
@@ -56,6 +59,8 @@ func (k Keeper) getGame(ctx sdk.Context, id uint) *Game {
 		return nil
 	}
 
+	fmt.Printf("Value in keeper: %s\n\n", value)
+
 	game := new(Game)
 	err := k.cdc.UnmarshalJSON(value, game)
 	if err != nil {
@@ -65,19 +70,57 @@ func (k Keeper) getGame(ctx sdk.Context, id uint) *Game {
 	return game
 }
 
-func (k Keeper) StartGame(ctx sdk.Context, player1, player2 sdk.AccAddress) *Game {
+func (k Keeper) StartGame(ctx sdk.Context, player1, player2 sdk.AccAddress, amount sdk.Coin) (*Game, sdk.Result) {
+	if !amount.IsZero() {
+		acc1 := k.accountKeeper.GetAccount(ctx, player1)
+		if acc1 == nil {
+			return nil, sdk.ErrInvalidAddress("No player 1 account").Result()
+		}
+
+		acc2 := k.accountKeeper.GetAccount(ctx, player2)
+		if acc2 == nil {
+			return nil, sdk.ErrInvalidAddress("No player 2 account").Result()
+		}
+
+		amountCoins := sdk.Coins{amount}
+		coins1 := acc1.GetCoins()
+		if !coins1.IsAllGTE(amountCoins) {
+			return nil, sdk.ErrInsufficientCoins("Player 1 has not enough tokens").Result()
+		}
+
+		coins2 := acc2.GetCoins()
+		if !coins2.IsAllGTE(amountCoins) {
+			return nil, sdk.ErrInsufficientCoins("Player 2 has not enough tokens").Result()
+		}
+
+		newCoins1 := coins1.Sub(amountCoins)
+		newCoins2 := coins2.Sub(amountCoins)
+
+		if err := acc1.SetCoins(newCoins1); err != nil {
+			panic(err)
+		}
+
+		if err := acc2.SetCoins(newCoins2); err != nil {
+			panic(err)
+		}
+
+		k.accountKeeper.SetAccount(ctx, acc1)
+		k.accountKeeper.SetAccount(ctx, acc2)
+	}
+
 	nextGameID := k.getGameId(ctx)
 	game := &Game{
 		Id:      nextGameID,
 		Player1: player1,
 		Player2: player2,
 		Fields:  emptyFields(),
+		Amount: amount,
 		Winner:  0,
 	}
 
 	k.storeGame(ctx, game)
 
-	return game
+	return game, sdk.Result{}
 }
 
 func (k Keeper) Play(ctx sdk.Context, gameID uint, player sdk.AccAddress, field uint) sdk.Result {
@@ -125,10 +168,33 @@ func (k Keeper) Play(ctx sdk.Context, gameID uint, player sdk.AccAddress, field 
 	game.Fields[fieldStr] = mark
 
 	checkWinner(game)
+	if game.Winner != 0 && !game.Amount.IsZero() {
+		k.distributeReward(ctx, game)
+	}
 
 	k.storeGame(ctx, game)
 
 	return sdk.Result{}
+}
+
+func (k Keeper) distributeReward(ctx sdk.Context, game *Game) {
+	var acc auth.Account
+	if game.Winner == 1 {
+		acc = k.accountKeeper.GetAccount(ctx, game.Player1)
+	} else {
+		acc = k.accountKeeper.GetAccount(ctx, game.Player2)
+	}
+
+	reward := sdk.Coins{game.Amount}
+	reward = reward.Add(reward)
+	currentCoins := acc.GetCoins()
+	newCoins := currentCoins.Add(reward)
+
+	if err := acc.SetCoins(newCoins); err != nil {
+		panic(err)
+	}
+
+	k.accountKeeper.SetAccount(ctx, acc)
 }
 
 func emptyFields() map[string]uint {

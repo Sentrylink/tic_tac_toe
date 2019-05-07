@@ -21,7 +21,11 @@ func NewHandler(keeper Keeper) sdk.Handler {
 }
 
 func handleMsgStartGame(ctx sdk.Context, keeper Keeper, msg MsgStartGame) sdk.Result {
-	game := keeper.StartGame(ctx, msg.Inviter, msg.Opponent)
+	game, res := keeper.StartGame(ctx, msg.Inviter, msg.Opponent, msg.Amount)
+	if game == nil  {
+		return res
+	}
+
 	gameData, err := json.Marshal(game)
 	if err != nil {
 		panic(err)

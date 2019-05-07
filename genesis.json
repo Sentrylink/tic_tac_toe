@@ -1,0 +1,68 @@
+{
+  "genesis_time": "2019-05-06T16:40:30.971268Z",
+  "chain_id": "ttt",
+  "consensus_params": {
+    "block_size": {
+      "max_bytes": "22020096",
+      "max_gas": "-1"
+    },
+    "evidence": {
+      "max_age": "100000"
+    },
+    "validator": {
+      "pub_key_types": [
+        "ed25519"
+      ]
+    }
+  },
+  "validators": [
+    {
+      "address": "4BBDFE56E8DAD9DC44428EE922B0A014C498DDD0",
+      "pub_key": {
+        "type": "tendermint/PubKeyEd25519",
+        "value": "os5ehDKhjsNLG38p89vh4fBOq17+7/diXrOTHRlsFmc="
+      },
+      "power": "10",
+      "name": ""
+    }
+  ],
+  "app_hash": "",
+  "app_state": {
+    "auth": {
+      "collected_fees": null,
+      "params": {
+        "max_memo_characters": "256",
+        "tx_sig_limit": "7",
+        "tx_size_cost_per_byte": "10",
+        "sig_verify_cost_ed25519": "590",
+        "sig_verify_cost_secp256k1": "1000"
+      }
+    },
+    "accounts": [
+      {
+        "address": "cosmos1csa9d3swcyz77q9guvacvm6g2nfpctmnhcq48k",
+        "coins": [
+          {
+            "denom": "abc",
+            "amount": "1000"
+          }
+        ],
+        "public_key": null,
+        "account_number": "0",
+        "sequence": "0"
+      },
+      {
+        "address": "cosmos1lrpj0y5pzv7za28ndsj0py8exm892em67gltr8",
+        "coins": [
+          {
+            "denom": "abc",
+            "amount": "2000"
+          }
+        ],
+        "public_key": null,
+        "account_number": "1",
+        "sequence": "0"
+      }
+     ]
+  }
+}

@@ -24,6 +24,8 @@ import (
 	bankcli "github.com/cosmos/cosmos-sdk/x/bank/client/cli"
 	"tic_tac_toe"
 	ticTacToeClient "tic_tac_toe/x/tic_tac_toe/client"
+	ticTacToeRest "tic_tac_toe/x/tic_tac_toe/client/rest"
+	authRest "github.com/cosmos/cosmos-sdk/x/auth/client/rest"
 )
 
 const (
@@ -88,6 +90,8 @@ func registerRoutes(rs *lcd.RestServer) {
 	rs.CliCtx = rs.CliCtx.WithAccountDecoder(rs.Cdc)
 	rpc.RegisterRoutes(rs.CliCtx, rs.Mux)
 	tx.RegisterRoutes(rs.CliCtx, rs.Mux, rs.Cdc)
+	ticTacToeRest.RegisterRoutes(rs.CliCtx, rs.Mux, rs.Cdc)
+	authRest.RegisterRoutes(rs.CliCtx, rs.Mux, rs.Cdc, "acc")
 }
 
 func queryCmd(cdc *codec.Codec, mc []sdkTypes.ModuleClients) *cobra.Command {

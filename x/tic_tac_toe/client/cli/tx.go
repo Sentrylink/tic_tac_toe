@@ -1,6 +1,7 @@
 package cli
 
 import (
+	"errors"
 	"github.com/cosmos/cosmos-sdk/client/context"
 	"github.com/cosmos/cosmos-sdk/client/keys"
 	"github.com/cosmos/cosmos-sdk/client/utils"
@@ -17,7 +18,7 @@ func GetCmdStartGame(cdc *codec.Codec) *cobra.Command {
 	return &cobra.Command{
 		Use:   "start [opponent_address]",
 		Short: "starts a new game",
-		Args:  cobra.ExactArgs(1),
+		Args:  cobra.ExactArgs(2),
 		RunE: func(cmd *cobra.Command, args []string) error {
 			cliCtx := context.NewCLIContext().WithCodec(cdc).WithAccountDecoder(cdc)
 
@@ -28,9 +29,18 @@ func GetCmdStartGame(cdc *codec.Codec) *cobra.Command {
 				return err
 			}
 
+			coins, err := sdk.ParseCoins(args[1])
+			if err != nil {
+				return err
+			}
+
+			if len(coins) > 1 {
+				return errors.New("Can only bet in one token")
+			}
+
 			sender := cliCtx.GetFromAddress()
 
-			msg := tic_tac_toe.NewMsgStartGame(sender, opponent)
+			msg := tic_tac_toe.NewMsgStartGame(sender, opponent, coins[0])
 			if err := msg.ValidateBasic(); err != nil {
 				return err
 			}

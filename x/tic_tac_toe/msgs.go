@@ -7,13 +7,15 @@ import (
 
 type MsgStartGame struct {
 	Opponent sdkTypes.AccAddress `json:"opponent"`
-	Inviter  sdkTypes.AccAddress `json:"owner"`
+	Inviter  sdkTypes.AccAddress `json:"inviter"`
+	Amount sdkTypes.Coin `json:"amount"`
 }
 
-func NewMsgStartGame(inviter, opponent sdkTypes.AccAddress) MsgStartGame {
+func NewMsgStartGame(inviter, opponent sdkTypes.AccAddress, amount sdkTypes.Coin) MsgStartGame {
 	return MsgStartGame{
 		Inviter:  inviter,
 		Opponent: opponent,
+		Amount: amount,
 	}
 }
 
