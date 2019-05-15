@@ -78,7 +78,7 @@ func (msg MsgPlay) Type() string {
 
 func (msg MsgPlay) ValidateBasic() sdkTypes.Error {
 	if msg.Player.Empty() {
-		return sdkTypes.ErrInvalidAddress("Inviter is empty")
+		return sdkTypes.ErrInvalidAddress("Player is empty")
 	}
 
 	if msg.Field > 8 {

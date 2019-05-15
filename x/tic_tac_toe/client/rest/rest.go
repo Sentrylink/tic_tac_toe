@@ -70,7 +70,7 @@ func QueryGame(
 type startGameRequest struct {
 	BaseReq rest.BaseReq `json:"base_req"`
 	Opponent sdk.AccAddress `json:"opponent"`
-	Inviter  sdk.AccAddress `json:"owner"`
+	Inviter  sdk.AccAddress `json:"inviter"`
 	Amount sdk.Coin `json:"amount"`
 }
 
@@ -89,7 +89,7 @@ func startGameHandler(cdc *codec.Codec, cliCtx context.CLIContext) http.HandlerF
 		}
 
 		// create the message
-		msg := tic_tac_toe.NewMsgStartGame(req.Opponent, req.Inviter, req.Amount)
+		msg := tic_tac_toe.NewMsgStartGame(req.Inviter, req.Opponent, req.Amount)
 		err := msg.ValidateBasic()
 		if err != nil {
 			rest.WriteErrorResponse(w, http.StatusBadRequest, err.Error())
