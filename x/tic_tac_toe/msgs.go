@@ -7,7 +7,7 @@ import (
 
 type MsgStartGame struct {
 	Opponent sdkTypes.AccAddress `json:"opponent"`
-	Inviter  sdkTypes.AccAddress `json:"owner"`
+	Inviter  sdkTypes.AccAddress `json:"inviter"`
 }
 
 func NewMsgStartGame(inviter, opponent sdkTypes.AccAddress) MsgStartGame {
