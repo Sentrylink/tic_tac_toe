@@ -33,17 +33,7 @@ type App struct {
 func NewApp(logger log.Logger, db db.DB) *App {
 	cdc := MakeDefaultCodec()
 
-	defaultDecoder := func(txBytes []byte) (sdk.Tx, sdk.Error) {
-		var tx = auth.StdTx{}
-
-		if err := cdc.UnmarshalJSON(txBytes, &tx); err != nil {
-			return nil, sdk.ErrTxDecode(err.Error())
-		}
-
-		return tx, nil
-	}
-
-	base := baseapp.NewBaseApp(appName, logger, db, defaultDecoder)
+	base := baseapp.NewBaseApp(appName, logger, db, auth.DefaultTxDecoder(cdc))
 
 	app := &App{
 		BaseApp: base,
