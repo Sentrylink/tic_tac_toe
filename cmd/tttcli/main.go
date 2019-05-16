@@ -45,10 +45,6 @@ func main() {
 	config.SetBech32PrefixForValidator(sdkTypes.Bech32PrefixValAddr, sdkTypes.Bech32PrefixValPub)
 	config.SetBech32PrefixForConsensusNode(sdkTypes.Bech32PrefixConsAddr, sdkTypes.Bech32PrefixConsPub)
 
-	config.SetTxEncoder(func(tx sdkTypes.Tx) ([]byte, error) {
-		return cdc.MarshalJSON(tx)
-	})
-
 	config.Seal()
 
 	tttModuleClient := ticTacToeClient.NewModuleClient(storeTicTacToe, cdc)

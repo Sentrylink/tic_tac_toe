@@ -28,12 +28,11 @@ func (k Keeper) setGameId(ctx sdk.Context, id uint) {
 	store.Set([]byte("id"), idBytes)
 }
 
-func (k Keeper) getGameId(ctx sdk.Context) uint {
+func (k Keeper) getGameId(ctx sdk.Context) int {
 	store := ctx.KVStore(k.key)
 	idBytes := store.Get([]byte("id"))
 	if idBytes == nil {
-		k.setGameId(ctx, 0)
-		return 0
+		return -1
 	}
 
 	id, err := strconv.Atoi(string(idBytes))
@@ -41,7 +40,7 @@ func (k Keeper) getGameId(ctx sdk.Context) uint {
 		panic(fmt.Sprintf("Invalid game id: %v", idBytes))
 	}
 
-	return uint(id)
+	return id
 }
 
 func (k Keeper) storeGame(ctx sdk.Context, game *Game) {
@@ -108,9 +107,10 @@ func (k Keeper) StartGame(ctx sdk.Context, player1, player2 sdk.AccAddress, amou
 		k.accountKeeper.SetAccount(ctx, acc2)
 	}
 
-	nextGameID := k.getGameId(ctx)
+	nextGameID := k.getGameId(ctx) + 1
+	k.setGameId(ctx, uint(nextGameID))
 	game := &Game{
-		Id:      nextGameID,
+		Id:      uint(nextGameID),
 		Player1: player1,
 		Player2: player2,
 		Fields:  emptyFields(),
